@@ -1,0 +1,44 @@
+---
+const today = new Date();
+---
+
+<footer class="footer footer-center block mb-5 pt-10">
+  <div class="pb-2">
+    &copy; {today.getFullYear()} Jared Kominsky
+  </div>
+
+  <div class="social-links">
+    <a
+      href="https://github.com/KominskyOrg"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img src="/github-mark.svg" alt="GitHub" />
+    </a>
+    <a
+      href="https://linkedin.com/in/jared-kominsky"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img src="/LI-In-Bug.png" alt="LinkedIn" />
+    </a>
+  </div>
+</footer>
+<style>
+  .social-links img {
+    width: 48px;
+    height: auto;
+    margin: 0 10px;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .social-links a {
+    display: inline-flex;
+    align-items: center;
+  }
+</style>
