@@ -1,0 +1,103 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TimeLineElement from "../components/cv/TimeLine.astro";
+---
+
+<BaseLayout title="Resume" sideBarActiveItemID="cv">
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Profile</div>
+  </div>
+
+  <div class="mb-10 text-justify">
+    Experienced Site Reliability Engineer and QA Automation Engineer, skilled in
+    AWS, Kubernetes, Docker, Terraform, and Python. Proven track record of
+    optimizing system reliability and implementing robust monitoring solutions.
+    Passionate about technology and continuous learning.
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Work Experience</div>
+  </div>
+
+  <TimeLineElement
+    title="Site Reliability Engineer II"
+    subtitle="Built Technologies, Nashville TN (Jan 2023 – Jul 2023)"
+  >
+    <ul>
+      <li>
+        - Implemented robust application monitoring solutions to enhance system
+        reliability.
+      </li>
+      <li>
+        - Collaborated on defining and implementing Service Level Objectives
+        (SLOs) and Service Level Indicators (SLIs).
+      </li>
+      <li>
+        - Designed monitoring strategies to proactively detect and resolve
+        system issues.
+      </li>
+      <li>
+        - Worked closely with development teams to integrate monitoring
+        solutions into the development lifecycle.
+      </li>
+      <li>
+        - Led on-call rotations, aiding in infrastructure troubleshooting and
+        incident response, and was instrumental in post-mortem analysis for
+        ongoing system improvements.
+      </li>
+    </ul>
+  </TimeLineElement>
+
+  <TimeLineElement
+    title="QA Automation Engineer"
+    subtitle="Built Technologies, Nashville TN (Jan 2022 - Jan 2023)"
+  >
+    <ul>
+      <li>
+        - Streamlined end-to-end testing processes, enhancing testing efficiency
+        and coverage.
+      </li>
+      <li>
+        - Optimized Continuous Integration (CI) pipelines to improve development
+        workflow.
+      </li>
+      <li>
+        - Developed and maintained automated testing scripts and frameworks.
+      </li>
+      <li>
+        - Conducted training sessions for team members, fostering a culture of
+        continuous learning and improvement.
+      </li>
+    </ul>
+  </TimeLineElement>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Education</div>
+  </div>
+
+  <TimeLineElement
+    title="Bachelor of Science in Computer Science, Minor in Entrepreneurship"
+    subtitle="Belmont University, Nashville TN (Graduated Dec 2021)"
+  >
+    Achievements include Stephen Campbell Math & Comp Sci Award and Dean’s List
+    Fall 2019 - Fall 2020.
+  </TimeLineElement>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Skills</div>
+  </div>
+
+  <div class="mb-10">
+    AWS, Kubernetes, Docker, Terraform, Python, DataDog, Postman, Monitoring,
+    CI/CD, Git, Bash.
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Interests</div>
+  </div>
+
+  <div class="mb-10">
+    Reading technical literature, hydroponic/soil gardening, tennis, traveling,
+    cooking, foodie!
+  </div>
+</BaseLayout>
