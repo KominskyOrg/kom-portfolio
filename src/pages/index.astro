@@ -1,13 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HorizontalCard from "../components/HorizontalCard.astro";
-import { getCollection } from "astro:content";
-
-const posts = (await getCollection("blog")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
-
-const last_posts = posts.slice(0, 3);
+import projectData from "../content/projectData.ts";
 ---
 
 <BaseLayout sideBarActiveItemID="home">
@@ -47,24 +41,22 @@ const last_posts = posts.slice(0, 3);
     <div class="text-3xl w-full font-bold mb-2">My last projects {"</>"}</div>
   </div>
 
-  <HorizontalCard
-    title="Kominsky Portfolio"
-    img="/github-mark.svg"
-    desc="My CV/Portfolio website, powered by Astro, serves as an interactive hub, presenting my career highlights, project links, and contact information, encapsulating my professional narrative in a sleek, user-friendly format."
-    url="https://github.com/KominskyOrg/kom-portfolio"
-    badge="NEW"
-  />
-  <div class="divider my-0"></div>
-  <HorizontalCard
-    title="Automated Repo Creation"
-    img="/python-logo.svg"
-    desc="Engineered a Python automation tool to expedite repository setups and Terraform configurations, significantly enhancing the maintainability of repositories."
-    url="https://github.com/KominskyOrg/repo-creation"
-  />
-  <HorizontalCard
-    title="Home Infrastructure - Infrastructure"
-    img="/EKS Cloud.svg"
-    desc="Developed a Terraform-based infrastructure for AWS EKS clusters that streamlined deployment processes and improved resource management efficiency."
-    url="https://github.com/KominskyOrg/kominsky-aws-tf"
-  />
+  <div>
+    {
+      projectData.slice(0, 3).map((project, index) => (
+        <>
+          <HorizontalCard
+            title={project.title}
+            img={project.img}
+            desc={project.desc}
+            url={project.url}
+            badge={project.badge || null}
+          />
+          {index < projectData.slice(0, 3).length - 1 ? (
+            <div class="divider my-0" />
+          ) : null}
+        </>
+      ))
+    }
+  </div>
 </BaseLayout>
