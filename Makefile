@@ -35,4 +35,28 @@ format:
 format-check:
 	npx prettier --check .
 
-.PHONY: all install dev start build preview astro format format-check
+# Terraform commands
+tf-init:
+	(cd tf && terraform init)
+
+tf-validate:
+	(cd tf && terraform validate)
+
+tf-plan:
+	(cd tf && terraform plan)
+
+tf-apply:
+	(cd tf && terraform apply)
+
+tf-destroy:
+	(cd tf && terraform destroy)
+
+tf-fmt:
+	(cd tf && terraform fmt)
+
+tf-output:
+	(cd tf && terraform output)
+
+.PHONY: all install dev start build preview astro format format-check \
+        tf-init tf-validate tf-plan tf-apply tf-destroy tf-fmt tf-output
+
