@@ -1,5 +1,11 @@
 const projectData = [
   {
+    title: "Kominsky Auth Platform",
+    img: "/auth-icon.svg",
+    desc: "A full-stack authentication platform designed for seamless user login, registration, and JWT-based authentication. The project integrates a frontend with secure API routing, a Flask-based backend, and an authentication service that manages user data in a database. The platform features a Dockerized environment for easy deployment, optimized Flask app configuration, centralized error handling, and CORS support, showcasing the ability to build scalable and secure systems end-to-end. Ideal for cloud-native environments, this project reflects my skills in both development and DevOps practices.",
+    url: "https://github.com/orgs/KominskyOrg/repositories?q=auth",
+  },
+  {
     title: "Kominsky Portfolio",
     img: "/github-mark.svg",
     desc: "My CV/Portfolio website, powered by Astro, serves as an interactive hub, presenting my career highlights, project links, and contact information, encapsulating my professional narrative in a sleek, minimalistic, user-friendly format.",
