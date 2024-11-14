@@ -7,31 +7,31 @@ import projectData from "../content/projectData.ts";
 <BaseLayout sideBarActiveItemID="home">
   <div class="pb-12 mt-5">
     <div class="text-xl py-1">Hey there 👋</div>
-    <div class="text-5xl font-bold">I'm Jared Kominsky</div>
-    <div class="text-3xl py-3 font-bold">
+    <h1 class="text-5xl font-bold">I'm Jared Kominsky</h1>
+    <h2 class="text-3xl py-3 font-bold">
       Code Conductor & Reliability Maestro
-    </div>
-    <div class="py-2">
-      <text class="text-lg">
-        With extensive expertise in performance monitoring and real-time
-        analytics, I utilize tools such as DataDog and Terraform to deliver
-        data-driven solutions that enhance efficiency and drive business
-        success. I am committed to elevating your systems and metrics and would
-        welcome the opportunity to discuss how I can contribute to your
-        organization's goals. Let's connect.
-      </text>
-    </div>
+    </h2>
+    <p class="text-lg py-2">
+      With extensive expertise in performance monitoring and real-time
+      analytics, I utilize tools like DataDog and Terraform to deliver
+      data-driven solutions that enhance efficiency and drive business
+      success. I'm committed to elevating your systems and metrics and would
+      love the opportunity to discuss how I can contribute to your
+      organization's goals. Let's connect!
+    </p>
     <div class="mt-8">
       <a
         class="btn"
         href="https://linkedin.com/in/jared-kominsky"
         target="_blank"
+        rel="noopener noreferrer"
       >
-        Let's connect!</a
-      >
+        Let's connect!
+      </a>
       <a
         href="https://github.com/KominskyOrg"
         target="_blank"
+        rel="noopener noreferrer"
         class="btn btn-outline ml-5"
       >
         Check out my GitHub
@@ -40,25 +40,21 @@ import projectData from "../content/projectData.ts";
   </div>
 
   <div>
-    <div class="text-3xl w-full font-bold mb-2">My last projects {"</>"}</div>
+    <h3 class="text-3xl w-full font-bold mb-2">My Latest Projects {"</>"}</h3>
   </div>
 
   <div>
-    {
-      projectData.slice(0, 3).map((project, index) => (
-        <>
-          <HorizontalCard
-            title={project.title}
-            img={project.img}
-            desc={project.desc}
-            url={project.url}
-            badge={project.badge || null}
-          />
-          {index < projectData.slice(0, 3).length - 1 ? (
-            <div class="divider my-0" />
-          ) : null}
-        </>
-      ))
-    }
+    {projectData.slice(0, 3).map((project, index) => (
+      <div key={project.title}>
+        <HorizontalCard
+          title={project.title}
+          img={project.img}
+          desc={project.desc}
+          url={project.url}
+          badge={project.badge || null}
+        />
+        {index < 2 && <div class="divider my-0" />}
+      </div>
+    ))}
   </div>
 </BaseLayout>
