@@ -2,17 +2,16 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import TimeLineElement from "../components/cv/TimeLine.astro";
 ---
-
 <BaseLayout title="Resume" sideBarActiveItemID="cv">
   <div class="mb-5">
     <div class="text-3xl w-full font-bold">Profile</div>
   </div>
 
   <div class="mb-10 text-justify">
-    Experienced Site Reliability Engineer and QA Automation Engineer, skilled in
-    AWS, Kubernetes, Docker, Terraform, and Python. Proven track record of
-    optimizing system reliability and implementing robust monitoring solutions.
-    Passionate about technology and continuous learning.
+    Experienced Site Reliability Engineer with expertise in AWS, Kubernetes, Docker, Terraform, and
+    Python. Proven track record of optimizing system reliability, implementing robust monitoring
+    solutions, and improving service reliability. Passionate about technology, continuous learning,
+    and delivering high-quality solutions.
   </div>
 
   <div class="mb-5">
@@ -20,53 +19,154 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
   </div>
 
   <TimeLineElement
-    title="Site Reliability Engineer II"
-    subtitle="Built Technologies, Nashville TN (Jan 2023 – Jul 2023)"
+    title="Site Reliability Engineer"
+    subtitle="Groups360, Nashville, TN (Jan 2024 - Present)"
   >
     <ul>
       <li>
-        - Implemented robust application monitoring solutions to enhance system
-        reliability.
+        - Own and continuously manage the optimization of DataDog implementation, serving as the
+        expert on application observability and metrics.
       </li>
       <li>
-        - Collaborated on defining and implementing Service Level Objectives
-        (SLOs) and Service Level Indicators (SLIs).
+        - Overhauled DataDog implementation, ensuring a seamless transition from server-based to
+        Kubernetes/Helm-based monitoring.
       </li>
       <li>
-        - Designed monitoring strategies to proactively detect and resolve
-        system issues.
+        - Designed an effective alerting strategy for 30 microservices using composite monitors,
+        enabling teams to receive actionable alerts and significantly improve service reliability.
       </li>
       <li>
-        - Worked closely with development teams to integrate monitoring
-        solutions into the development lifecycle.
+        - Integrated DataDog with Microsoft Teams for centralized alerting, creating squad-based
+        team channels for fast, efficient communication, increasing incident response times by 50%.
       </li>
       <li>
-        - Led on-call rotations, aiding in infrastructure troubleshooting and
-        incident response, and was instrumental in post-mortem analysis for
-        ongoing system improvements.
+        - Reduced DataDog costs by 35% after migrating to Kubernetes by strategically reducing APM
+        and DBM hosts, and implementing efficient logging and span retention strategies.
+      </li>
+      <li>
+        - Automated testing and deployment pipelines, implementing CI testing for front-end and unit
+        tests using various tools and frameworks.
+      </li>
+    </ul>
+  </TimeLineElement>
+
+  <TimeLineElement
+    title="Site Reliability Engineer II"
+    subtitle="Built Technologies, Nashville, TN (Jan 2023 – Jul 2023)"
+  >
+    <ul>
+      <li>
+        - Implemented robust application monitoring solutions using DataDog and CloudFront, reducing
+        incident response time by 75%.
+      </li>
+      <li>
+        - Designed comprehensive monitoring strategies for approximately 40 microservices, improving
+        observability and actionable insights.
+      </li>
+      <li>
+        - Collaborated cross-functionally to define and implement Service Level Objectives (SLOs)
+        and Service Level Indicators (SLIs), aligning monitoring efforts with business goals and
+        enhancing service reliability.
+      </li>
+      <li>
+        - Leveraged DataDog APM to trace and optimize database queries, enhancing database
+        performance.
       </li>
     </ul>
   </TimeLineElement>
 
   <TimeLineElement
     title="QA Automation Engineer"
-    subtitle="Built Technologies, Nashville TN (Jan 2022 - Jan 2023)"
+    subtitle="Built Technologies, Nashville, TN (Jan 2022 - Jan 2023)"
   >
     <ul>
       <li>
-        - Streamlined end-to-end testing processes, enhancing testing efficiency
-        and coverage.
+        - Streamlined end-to-end testing processes for developers, improving feature reliability and
+        development efficiency.
       </li>
       <li>
-        - Optimized Continuous Integration (CI) pipelines to improve development
-        workflow.
+        - Optimized Continuous Integration (CI) pipeline configuration, reducing build and
+        deployment times through caching and dependency management.
       </li>
       <li>
-        - Developed and maintained automated testing scripts and frameworks.
+        - Implemented parallelization and distributed testing, reducing overall test cycle time by
+        75%.
+      </li>
+    </ul>
+  </TimeLineElement>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Awards and Recognitions</div>
+  </div>
+
+  <TimeLineElement title="Built Onward Award" subtitle="Built Technologies, Dec 2022">
+    <ul>
+      <li>
+        - Recognized for exceptional work ethic and outstanding results, earning the Built Onward
+        Award given to less than 10% of team members.
+      </li>
+    </ul>
+  </TimeLineElement>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Projects</div>
+  </div>
+
+  <TimeLineElement
+    title="Python Core Package"
+    subtitle="https://github.com/KominskyOrg/kom_python_core"
+  >
+    <ul>
+      <li>
+        - Developed the foundational Python library for organizational projects, offering essential
+        utilities and standardized configurations.
       </li>
       <li>
-        - Conducted training sessions for team members, fostering a culture of
-        continuous learning and improvement.
+        - Included core modules for logging, configuration management, and common functionalities to
+        ensure consistency and efficiency across applications.
+      </li>
+      <li>
+        - Facilitated seamless integration and streamlined development within a microservice
+        architecture.
+      </li>
+    </ul>
+  </TimeLineElement>
+
+  <TimeLineElement
+    title="Stack Templates"
+    subtitle="https://github.com/orgs/KominskyOrg/repositories?q=template"
+  >
+    <ul>
+      <li>
+        - Created template repositories tailored for building microservice architecture stacks,
+        allowing easy replacement with specific service names like auth, identity, or inspection.
+      </li>
+      <li>
+        - Equipped with predefined configurations and deployment scripts to facilitate swift and
+        efficient deployment to staging and development environments.
+      </li>
+      <li>
+        - Streamlined the setup process for scalable and modular applications.
+      </li>
+    </ul>
+  </TimeLineElement>
+
+  <TimeLineElement
+    title="Kominsky Auth Platform"
+    subtitle="https://github.com/orgs/KominskyOrg/repositories?q=auth"
+  >
+    <ul>
+      <li>
+        - Developed a full-stack authentication platform featuring a React and TypeScript frontend
+        alongside Python-based backend services.
+      </li>
+      <li>
+        - Utilized Docker for containerization, and employed Terraform and Helm for infrastructure
+        as code and Kubernetes deployments.
+      </li>
+      <li>
+        - Established robust CI/CD pipelines using GitHub Actions, ensuring scalable, automated, and
+        efficient deployment and maintenance processes.
       </li>
     </ul>
   </TimeLineElement>
@@ -77,10 +177,10 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
 
   <TimeLineElement
     title="Bachelor of Science in Computer Science, Minor in Entrepreneurship"
-    subtitle="Belmont University, Nashville TN (Graduated Dec 2021)"
+    subtitle="Belmont University, Nashville, TN (Graduated Dec 2021)"
   >
-    Achievements include Stephen Campbell Math & Comp Sci Award and Dean’s List
-    Fall 2019 - Fall 2020.
+    Achievements include Stephen Campbell Math & Computer Science Award (one award per year),
+    Dean’s List Fall 2019 - Fall 2020. GPA: 3.76.
   </TimeLineElement>
 
   <div class="mb-5">
@@ -88,16 +188,7 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
   </div>
 
   <div class="mb-10">
-    AWS, Kubernetes, Docker, Terraform, Python, DataDog, Postman, Monitoring,
-    CI/CD, Git, Bash.
-  </div>
-
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Interests</div>
-  </div>
-
-  <div class="mb-10">
-    Reading technical literature, hydroponic/soil gardening, tennis, traveling,
-    cooking, foodie!
+    AWS, Kubernetes, Docker, Terraform, DataDog, Python, Postman, Monitoring, Observability, CI/CD,
+    Git, Bash.
   </div>
 </BaseLayout>
