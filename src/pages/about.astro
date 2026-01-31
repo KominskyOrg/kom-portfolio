@@ -14,31 +14,39 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         I design, build, and maintain cloud-native systems that are scalable, resilient, and
         efficient. My work centers on bridging Site Reliability Engineering principles with
         DevOps practices to deliver infrastructure that enables rapid development without
-        compromising reliability. When I'm not optimizing Kubernetes clusters or building
-        Terraform modules, you can find me immersed in hydroponic gardening, playing tennis,
-        traveling, or exploring new culinary delights.
+        compromising reliability.
       </p>
     </div>
   </div>
 
   <div>
+    <div class="text-3xl w-full font-bold mb-2">How I Work</div>
+    <div class="py-2">
+      <ul class="list-disc ml-6 text-lg space-y-2">
+        <li>
+          I analyze usage data before capacity decisions—at Groups360, I reviewed six months of CPU and memory metrics before right-sizing, reducing infrastructure costs by 40%.
+        </li>
+        <li>
+          I validate scaling under load before production—at Groups360, I ran k6 load tests to confirm HPA policies matched real traffic patterns.
+        </li>
+        <li>
+          I design monitoring for signal quality, not volume—at Built Technologies, I built alerting for 40+ microservices focused on actionable signals, reducing incident response time by 75%.
+        </li>
+        <li>
+          I enforce standards through automation—at Groups360, I used Terraform to manage 200+ repositories with consistent branch protection and CI requirements.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mt-6">
     <div class="text-3xl w-full font-bold mb-2">Professional Journey</div>
     <div class="py-2">
       <p class="text-lg">
-        With 4+ years owning production Kubernetes and AWS infrastructure, I've delivered
-        measurable impact at every role. At Groups360, I reduced infrastructure costs by 40%
-        through resource right-sizing, cut observability spend by 35% via strategic Datadog
-        optimization, and led the migration from manual EKS provisioning to Terraform
-        infrastructure as code. I also drove the adoption of Argo CD GitOps workflows,
-        built autoscaling CI infrastructure using GitHub Actions Runner Controller, and
-        automated management of 200+ repositories with Terraform.
+        At Groups360, I reduced infrastructure costs by 40%, cut observability spend by 35%, and migrated EKS to Terraform IaC. I drove Argo CD GitOps adoption and automated 200+ repository configurations with Terraform.
       </p>
       <p class="text-lg mt-4">
-        At Built Technologies, I implemented monitoring for 40+ microservices that reduced
-        incident response time by 75%, defined SLIs/SLOs aligned with business priorities,
-        and built test automation that cut CI/CD cycle time by 75%. My approach combines
-        technical depth with a focus on cost optimization, operational efficiency, and
-        enabling development teams to ship faster.
+        At Built Technologies, I owned monitoring for 40+ microservices, reducing incident response time by 75%, and built test automation that cut CI/CD cycle time by 75%.
       </p>
     </div>
   </div>
@@ -108,8 +116,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <strong>Built Onward Award</strong> at Built Technologies, given to less than 10%
         of team members for exceptional work ethic and sustained impact. At Belmont University,
         I received the <strong>Stephen Campbell Math & Computer Science Award</strong> (one
-        recipient per year) and consistently made the Dean's List. These achievements reflect
-        my commitment to both professional and academic excellence.
+        recipient per year) and consistently made the Dean's List.
       </p>
     </div>
   </div>
@@ -120,8 +127,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <p class="text-lg">
         I'm always eager to connect with teams building reliable, scalable infrastructure.
         Whether you're looking for someone to own your Kubernetes platform, optimize your
-        observability stack, or implement GitOps workflows — let's talk. I'm also happy
-        to chat about hydroponic systems, tennis, or the best restaurants in Nashville.
+        observability stack, or implement GitOps workflows — let's talk.
       </p>
     </div>
     <div class="mt-8">
@@ -141,6 +147,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       >
         Visit My GitHub
       </a>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <div class="text-3xl w-full font-bold mb-2">Outside of Work</div>
+    <div class="py-2">
+      <p class="text-lg">
+        I enjoy hydroponic gardening, tennis, traveling, and exploring Nashville's food scene.
+      </p>
     </div>
   </div>
 </BaseLayout>
