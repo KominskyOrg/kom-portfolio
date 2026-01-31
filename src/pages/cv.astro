@@ -12,285 +12,85 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     infrastructure. Reduced observability spend by 35%, infrastructure costs by 40%, and incident
     response time by 75% through improved monitoring, alert design, and operational practices.
     Built Terraform-based infrastructure and GitOps workflows, focused on reliability, cost control,
-    and capacity planning. Experienced in bridging SRE principles with DevOps practices to deliver
-    infrastructure that enables rapid development without compromising reliability.
+    and capacity planning.
+  </div>
+
+  <div class="mb-6 p-4 bg-base-200 rounded-lg">
+    <p class="text-lg">
+      For complete role details and accomplishments, <a href="/resume.pdf" class="link link-primary font-semibold" target="_blank">download my full resume (PDF)</a>.
+    </p>
   </div>
 
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Work Experience</div>
+    <div class="text-3xl w-full font-bold">Experience Themes</div>
+  </div>
+
+  <div class="mb-8">
+    <div class="text-xl font-bold mb-2">Infrastructure Ownership</div>
+    <p class="text-lg mb-2">
+      Owned production Kubernetes and AWS infrastructure at Groups360 (2 years) and Built Technologies (7 months). Migrated EKS provisioning to Terraform IaC, drove Argo CD GitOps adoption, and designed multi-AZ resilience with topology spread constraints and anti-affinity rules.
+    </p>
+  </div>
+
+  <div class="mb-8">
+    <div class="text-xl font-bold mb-2">Cost Optimization</div>
+    <p class="text-lg mb-2">
+      Reduced infrastructure costs by 40% through six months of usage analysis and resource right-sizing. Cut observability spend by 35% via host optimization, log ingestion controls, and APM retention tuning.
+    </p>
+  </div>
+
+  <div class="mb-8">
+    <div class="text-xl font-bold mb-2">Observability & Incident Response</div>
+    <p class="text-lg mb-2">
+      Reduced incident response time by 75% across 40+ microservices at Built Technologies. Built 30+ actionable monitors at Groups360. Defined SLIs/SLOs aligned with business priorities. Led incident response and post-incident reviews.
+    </p>
+  </div>
+
+  <div class="mb-8">
+    <div class="text-xl font-bold mb-2">Automation & Standards</div>
+    <p class="text-lg mb-2">
+      Automated management of 200+ GitHub repositories with Terraform at Groups360. Built autoscaling CI infrastructure using GitHub Actions Runner Controller. Reduced CI/CD cycle time by 75% through parallel execution and dependency optimization at Built Technologies.
+    </p>
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Work History</div>
   </div>
 
   <TimeLineElement
     title="Site Reliability Engineer"
     subtitle="Groups360, Nashville, TN (Jan 2024 - Jan 2026)"
   >
-    <ul class="list-disc ml-4 space-y-2">
-      <li>
-        Owned production Kubernetes and AWS infrastructure supporting customer-facing services
-        across multiple availability zones
-      </li>
-      <li>
-        Migrated EKS provisioning from manual processes to Terraform infrastructure as code,
-        enabling repeatable deployments and reducing disaster recovery time
-      </li>
-      <li>
-        Analyzed six months of CPU and memory usage to right-size requests and limits, aligned
-        scaling policies with workload patterns, reducing infrastructure costs by 40%
-      </li>
-      <li>
-        Validated HPA scaling behavior with k6 load testing, identified bottlenecks, supported
-        SLO compliance under peak load
-      </li>
-      <li>
-        Implemented anti-affinity rules, topology spread constraints, and multi-AZ pod distribution
-        to improve resilience during node and availability zone failures
-      </li>
-      <li>
-        Modernized readiness and liveness checks from static probes to endpoint-based health checks
-        to improve failure detection accuracy
-      </li>
-      <li>
-        Migrated Kubernetes deployments from Helm-based CI workflows to Argo CD GitOps, improving
-        deployment reliability, traceability, and operational consistency
-      </li>
-      <li>
-        Built a dedicated infrastructure cluster for CI runners and connected lower and production
-        clusters to shared runners with strict security boundaries and access controls
-      </li>
-      <li>
-        Migrated CI/CD runners from manually scaled infrastructure to autoscaling GitHub Actions
-        runners using GitHub Actions Runner Controller
-      </li>
-      <li>
-        Owned Datadog implementation, standardized logging, metrics, and APM across teams
-      </li>
-      <li>
-        Built 30+ actionable monitors and alerting rules, integrated with Microsoft Teams for
-        squad-based channels, improved signal quality for on-call response
-      </li>
-      <li>
-        Reduced observability costs by 35% through host optimization, log ingestion controls,
-        and APM retention tuning
-      </li>
-      <li>
-        Automated management of 200+ GitHub repositories using Terraform, enforced standards
-        across infrastructure and CI/CD pipelines
-      </li>
-      <li>
-        Led incident response and post-incident reviews, improved runbooks and alert quality
-        across production environments
-      </li>
-    </ul>
+    <p class="text-lg">Owned production Kubernetes/AWS infrastructure. Key outcomes: 40% cost reduction, 35% observability savings, GitOps migration, 200+ repo automation.</p>
   </TimeLineElement>
 
   <TimeLineElement
     title="Site Reliability Engineer II"
     subtitle="Built Technologies, Nashville, TN (Jan 2023 - Jul 2023)"
   >
-    <ul class="list-disc ml-4 space-y-2">
-      <li>
-        Implemented Datadog monitoring, logging, and alerting for 40+ microservices, reducing
-        incident response time by 75%
-      </li>
-      <li>
-        Designed comprehensive monitoring strategies covering metrics, logs, and distributed
-        traces to enhance observability
-      </li>
-      <li>
-        Defined SLIs and SLOs with stakeholders to align reliability targets with product needs
-        and business priorities
-      </li>
-      <li>
-        Identified and resolved database performance bottlenecks using Datadog APM and distributed
-        tracing
-      </li>
-      <li>
-        Integrated DataDog with PagerDuty to establish a streamlined incident escalation and
-        resolution process
-      </li>
-    </ul>
+    <p class="text-lg">Owned observability for 40+ microservices. Key outcomes: 75% faster incident response, SLI/SLO implementation, PagerDuty integration.</p>
   </TimeLineElement>
 
   <TimeLineElement
     title="QA Automation Engineer"
     subtitle="Built Technologies, Nashville, TN (Jan 2022 - Jan 2023)"
   >
-    <ul class="list-disc ml-4 space-y-2">
-      <li>
-        Built and scaled end-to-end test automation, reduced CI/CD cycle time by 75% through
-        parallel execution and dependency optimization
-      </li>
-      <li>
-        Established documentation standards to ensure high-quality and maintainable test
-        automation code
-      </li>
-      <li>
-        Optimized CI pipeline configuration with caching and dependency management to reduce
-        build and deployment times
-      </li>
-      <li>
-        Led proof-of-concept evaluations for new CI tooling to address inefficiencies and
-        improve workflows
-      </li>
-      <li>
-        Conducted training sessions on CI pipeline optimization and E2E testing best practices
-      </li>
-      <li>
-        Recognized with the Built Onward Award for sustained impact and ownership
-      </li>
-    </ul>
+    <p class="text-lg">Owned test automation and CI optimization. Key outcomes: 75% faster CI/CD cycles, Built Onward Award recipient.</p>
   </TimeLineElement>
 
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Awards and Recognitions</div>
+    <div class="text-3xl w-full font-bold">Awards</div>
   </div>
 
   <TimeLineElement title="Built Onward Award" subtitle="Built Technologies, Dec 2022">
-    <ul class="list-disc ml-4">
-      <li>
-        Recognized for exceptional work ethic and outstanding results, awarded to less than
-        10% of team members for sustained impact and ownership
-      </li>
-    </ul>
+    <p class="text-lg">Awarded to less than 10% of team members for sustained impact and ownership.</p>
   </TimeLineElement>
 
   <TimeLineElement
     title="Stephen Campbell Math & Computer Science Award"
     subtitle="Belmont University, 2021"
   >
-    <ul class="list-disc ml-4">
-      <li>
-        Annual award recognizing outstanding achievement in mathematics and computer science
-      </li>
-    </ul>
-  </TimeLineElement>
-
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Projects</div>
-  </div>
-
-  <TimeLineElement
-    title="UnifyOps - Internal Developer Platform"
-    subtitle="https://github.com/KominskyOrg/unifyops-core"
-  >
-    <ul class="list-disc ml-4 space-y-2">
-      <li>
-        Designed and implemented a multi-environment Internal Developer Platform using Terraform,
-        AWS EKS, and Argo CD to provide repeatable, self-service infrastructure
-      </li>
-      <li>
-        Built full-stack application with FastAPI/PostgreSQL backend and React/TypeScript frontend
-        featuring drag-and-drop infrastructure designer using Shadcn/ui and dnd-kit
-      </li>
-      <li>
-        Implemented Kubernetes abstractions including HPA, Pod Disruption Budgets, and scheduling
-        constraints to improve platform reliability
-      </li>
-      <li>
-        Developed GitHub Actions CI/CD pipelines for build, test, security scanning, and
-        environment-specific deployments
-      </li>
-    </ul>
-  </TimeLineElement>
-
-  <TimeLineElement
-    title="Job Scanner - LLM Automation Pipeline"
-    subtitle="https://github.com/KominskyOrg/job-scanner"
-  >
-    <ul class="list-disc ml-4 space-y-2">
-      <li>
-        Built automated job screening pipeline leveraging GPT-4 for LLM-based role evaluation
-        and fit scoring
-      </li>
-      <li>
-        Implemented LinkedIn scraping via Playwright with deterministic gates for dealbreakers
-        and automated cover letter generation
-      </li>
-      <li>
-        Designed full audit trail with prompt versioning, regression testing, and structured
-        output validation
-      </li>
-    </ul>
-  </TimeLineElement>
-
-  <TimeLineElement
-    title="Kominsky Auth Platform"
-    subtitle="https://github.com/orgs/KominskyOrg/repositories?q=auth"
-  >
-    <ul class="list-disc ml-4 space-y-2">
-      <li>
-        Built a containerized authentication service using Python, Docker, Helm, and Terraform
-        with secure secrets management and JWT-based auth flows
-      </li>
-      <li>
-        Implemented microservices architecture with React/TypeScript frontend communicating
-        through Flask API Gateway to backend services
-      </li>
-      <li>
-        Docker images and Helm charts published to self-hosted Harbor registry, deployed to
-        bare-metal Kubernetes with automated CI/CD
-      </li>
-    </ul>
-  </TimeLineElement>
-
-  <TimeLineElement
-    title="Stack Templates - Microservice Scaffolding"
-    subtitle="https://github.com/orgs/KominskyOrg/repositories?q=template"
-  >
-    <ul class="list-disc ml-4 space-y-2">
-      <li>
-        Created production-ready microservice architecture templates implementing a three-tier
-        pattern (App → API Gateway → Service)
-      </li>
-      <li>
-        Each template includes Flask/React foundations, multi-environment Dockerfiles, and
-        Terraform for Kubernetes deployment
-      </li>
-      <li>
-        Pre-configured GitHub Actions CI/CD with Docker images and Helm charts publishing to
-        self-hosted Harbor registry
-      </li>
-    </ul>
-  </TimeLineElement>
-
-  <TimeLineElement
-    title="Python Core Package"
-    subtitle="https://github.com/KominskyOrg/kom_python_core"
-  >
-    <ul class="list-disc ml-4 space-y-2">
-      <li>
-        Developed foundational Python library providing standardized utilities across all
-        organization microservices
-      </li>
-      <li>
-        Includes HTTPClient for service-to-service communication, LoggingConfig with JSON
-        formatting and rotating file handlers
-      </li>
-      <li>
-        Typed API exceptions (ValidationError, AuthenticationError, DatabaseError) for
-        consistent error handling
-      </li>
-    </ul>
-  </TimeLineElement>
-
-  <TimeLineElement
-    title="Terraform Modules"
-    subtitle="https://github.com/KominskyOrg/kom-tf-modules"
-  >
-    <ul class="list-disc ml-4 space-y-2">
-      <li>
-        Reusable Terraform modules for Kubernetes and database infrastructure consumed via
-        Git refs for versioned, consistent patterns
-      </li>
-      <li>
-        EKS module provides configurable Kubernetes Deployments with health probes, dynamic
-        environment variables, and node selectors
-      </li>
-      <li>
-        DB module integrates AWS Secrets Manager with Kubernetes secrets and Lambda-based
-        database provisioning
-      </li>
-    </ul>
+    <p class="text-lg">Annual award for outstanding achievement in mathematics and computer science.</p>
   </TimeLineElement>
 
   <div class="mb-5">
@@ -301,10 +101,7 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
     title="Bachelor of Science in Computer Science, Minor in Entrepreneurship"
     subtitle="Belmont University, Nashville, TN (Graduated Dec 2021)"
   >
-    <div class="ml-4">
-      <p><strong>GPA:</strong> 3.76</p>
-      <p><strong>Honors:</strong> Stephen Campbell Math & Computer Science Award (annual awardee), Dean's List Fall 2019 - Fall 2020</p>
-    </div>
+    <p class="text-lg">GPA: 3.76 | Dean's List Fall 2019 - Fall 2020</p>
   </TimeLineElement>
 
   <div class="mb-5">
@@ -314,31 +111,23 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
   <div class="mb-10">
     <div class="mb-4">
       <span class="font-semibold">Kubernetes & Container Orchestration:</span>
-      EKS, HPA, Pod Disruption Budgets, multi-AZ scheduling, affinity rules, topology spread constraints
+      EKS, HPA, Pod Disruption Budgets, multi-AZ scheduling, affinity rules
     </div>
     <div class="mb-4">
       <span class="font-semibold">Infrastructure as Code & GitOps:</span>
       Terraform, Helm, Argo CD, GitHub Actions
     </div>
     <div class="mb-4">
-      <span class="font-semibold">Cloud Platforms & Architecture:</span>
-      AWS (EKS, RDS, S3, CloudFront, Secrets Manager, IAM), multi-region, high availability
+      <span class="font-semibold">Cloud Platforms:</span>
+      AWS (EKS, RDS, S3, CloudFront, Secrets Manager, IAM)
     </div>
     <div class="mb-4">
       <span class="font-semibold">Observability:</span>
-      Datadog (APM, logging, metrics, distributed tracing), SLIs/SLOs, alerting strategies
-    </div>
-    <div class="mb-4">
-      <span class="font-semibold">CI/CD & Automation:</span>
-      GitHub Actions, GitHub Actions Runner Controller, Docker, Harbor registry
-    </div>
-    <div class="mb-4">
-      <span class="font-semibold">Programming & Scripting:</span>
-      Python, Bash, Linux
+      Datadog (APM, logging, metrics, distributed tracing), SLIs/SLOs
     </div>
     <div class="mb-4">
       <span class="font-semibold">Reliability Engineering:</span>
-      Incident response, post-incident reviews, load testing (k6), capacity planning, cost optimization
+      Incident response, load testing (k6), capacity planning, cost optimization
     </div>
   </div>
 </BaseLayout>
