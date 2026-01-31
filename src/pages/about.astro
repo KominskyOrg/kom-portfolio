@@ -1,7 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-// Additional imports if needed
 ---
 
 <BaseLayout sideBarActiveItemID="about">
@@ -9,15 +7,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="text-xl py-1">Hello, and welcome!</div>
     <div class="text-5xl font-bold">I'm Jared Kominsky</div>
     <div class="text-3xl py-3 font-bold">
-      Site Reliability Engineer & Technology Enthusiast
+      DevOps & Site Reliability Engineer
     </div>
     <div class="py-2">
       <p class="text-lg">
-        With a passion for optimizing systems and implementing robust solutions, I specialize 
-        in AWS, Kubernetes, Docker, Terraform, and Python. My journey began at Belmont 
-        University, where I majored in Computer Science and minored in Entrepreneurship, 
-        blending technical expertise with innovative thinking. When I'm not enhancing system 
-        reliability, you can find me immersed in hydroponic gardening, playing tennis, 
+        I design, build, and maintain cloud-native systems that are scalable, resilient, and
+        efficient. My work centers on bridging Site Reliability Engineering principles with
+        DevOps practices to deliver infrastructure that enables rapid development without
+        compromising reliability. When I'm not optimizing Kubernetes clusters or building
+        Terraform modules, you can find me immersed in hydroponic gardening, playing tennis,
         traveling, or exploring new culinary delights.
       </p>
     </div>
@@ -27,55 +25,103 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="text-3xl w-full font-bold mb-2">Professional Journey</div>
     <div class="py-2">
       <p class="text-lg">
-        Throughout my career, I've had the privilege of working with dynamic teams at
-        Groups360 and Built Technologies. At Groups360, I overhauled DataDog
-        implementations and improved incident response times by 50%. At Built
-        Technologies, I implemented monitoring solutions that reduced incident
-        response time by 75% and streamlined testing processes to enhance
-        development efficiency. My approach centers around continuous
-        improvement, collaboration, and delivering high-quality solutions.
+        With 4+ years owning production Kubernetes and AWS infrastructure, I've delivered
+        measurable impact at every role. At Groups360, I reduced infrastructure costs by 40%
+        through resource right-sizing, cut observability spend by 35% via strategic Datadog
+        optimization, and led the migration from manual EKS provisioning to Terraform
+        infrastructure as code. I also drove the adoption of Argo CD GitOps workflows,
+        built autoscaling CI infrastructure using GitHub Actions Runner Controller, and
+        automated management of 200+ repositories with Terraform.
+      </p>
+      <p class="text-lg mt-4">
+        At Built Technologies, I implemented monitoring for 40+ microservices that reduced
+        incident response time by 75%, defined SLIs/SLOs aligned with business priorities,
+        and built test automation that cut CI/CD cycle time by 75%. My approach combines
+        technical depth with a focus on cost optimization, operational efficiency, and
+        enabling development teams to ship faster.
       </p>
     </div>
   </div>
 
-  <div>
-    <div class="text-3xl w-full font-bold mb-2">Projects & Contributions</div>
+  <div class="mt-6">
+    <div class="text-3xl w-full font-bold mb-2">What I'm Building</div>
     <div class="py-2">
       <p class="text-lg">
-        I'm passionate about open-source and continuously engage in projects that
-        push the boundaries of technology. Some of my notable projects include
-        developing a full-stack authentication platform, creating Terraform
-        modules for AWS EKS cluster management, and automating repository
-        creation processes. These projects showcase my technical skills and
-        commitment to innovation and efficiency.
+        I'm currently focused on building tools that solve real problems in the DevOps space:
+      </p>
+      <ul class="list-disc ml-6 mt-3 text-lg space-y-2">
+        <li>
+          <strong>UnifyOps</strong> — An Internal Developer Platform (IDP) with a drag-and-drop
+          infrastructure designer, built with FastAPI, React/TypeScript, and deployed to
+          bare-metal Kubernetes via GitOps
+        </li>
+        <li>
+          <strong>Job Scanner</strong> — An LLM-powered automation pipeline using GPT-4 for
+          intelligent job screening, fit scoring, and automated outreach generation
+        </li>
+        <li>
+          <strong>Auth Platform</strong> — A production-ready microservices authentication
+          system with JWT flows, deployed via Helm charts to self-hosted Harbor registry
+        </li>
+        <li>
+          <strong>Stack Templates</strong> — Reusable microservice scaffolding implementing
+          three-tier architecture patterns with pre-configured CI/CD
+        </li>
+      </ul>
+      <p class="text-lg mt-4">
+        All projects are deployed to my home lab infrastructure — bare-metal Kubernetes
+        running on personal servers with Harbor registry, demonstrating end-to-end DevOps
+        practices from code to production.
       </p>
     </div>
   </div>
 
-  <div>
-    <div class="text-3xl w-full font-bold mb-2">Awards & Recognitions</div>
+  <div class="mt-6">
+    <div class="text-3xl w-full font-bold mb-2">Core Expertise</div>
+    <div class="py-2">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
+        <div>
+          <p class="font-semibold">Infrastructure & Orchestration</p>
+          <p class="text-base">Kubernetes, EKS, Terraform, Helm, Argo CD</p>
+        </div>
+        <div>
+          <p class="font-semibold">Cloud & Architecture</p>
+          <p class="text-base">AWS, multi-AZ, high availability, GitOps</p>
+        </div>
+        <div>
+          <p class="font-semibold">Observability</p>
+          <p class="text-base">Datadog, APM, distributed tracing, SLIs/SLOs</p>
+        </div>
+        <div>
+          <p class="font-semibold">Automation</p>
+          <p class="text-base">GitHub Actions, CI/CD, Python, Bash</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <div class="text-3xl w-full font-bold mb-2">Awards & Recognition</div>
     <div class="py-2">
       <p class="text-lg">
-        My dedication to excellence has been recognized through awards such as
-        the Built Onward Award at Built Technologies, given to less than 10% of
-        team members for exceptional work ethic and outstanding results. At
-        Belmont University, I was honored with the Stephen Campbell Math &
-        Computer Science Award and consistently made the Dean's List. These
-        accolades reflect my commitment to both professional and academic
-        excellence.
+        My dedication to excellence has been recognized through awards including the
+        <strong>Built Onward Award</strong> at Built Technologies, given to less than 10%
+        of team members for exceptional work ethic and sustained impact. At Belmont University,
+        I received the <strong>Stephen Campbell Math & Computer Science Award</strong> (one
+        recipient per year) and consistently made the Dean's List. These achievements reflect
+        my commitment to both professional and academic excellence.
       </p>
     </div>
   </div>
 
-  <div>
+  <div class="mt-6">
     <div class="text-3xl w-full font-bold mb-2">Let's Connect</div>
     <div class="py-2">
       <p class="text-lg">
-        I'm always eager to connect with like-minded professionals and explore
-        new opportunities. Whether you'd like to discuss technology,
-        collaborate on a project, or share insights on gardening and cooking,
-        feel free to reach out. Let's work together to create efficient,
-        reliable systems—and perhaps enjoy a good meal along the way!
+        I'm always eager to connect with teams building reliable, scalable infrastructure.
+        Whether you're looking for someone to own your Kubernetes platform, optimize your
+        observability stack, or implement GitOps workflows — let's talk. I'm also happy
+        to chat about hydroponic systems, tennis, or the best restaurants in Nashville.
       </p>
     </div>
     <div class="mt-8">
