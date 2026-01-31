@@ -1,5 +1,5 @@
 ---
-const { title, img, desc, url, badge, target = "_blank" } = Astro.props;
+const { title, img, desc, url, badge, role, outcome, target = "_blank" } = Astro.props;
 const { tags } = Astro.props as { tags: string[] };
 import { Image } from "astro:assets";
 const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
@@ -27,7 +27,9 @@ const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
           {title}
           {badge && <div class="badge badge-secondary mx-2">{badge}</div>}
         </h1>
+        {role && <p class="text-sm text-gray-500 font-medium">{role}</p>}
         <p class="py-1 text-1xl">{desc}</p>
+        {outcome && <p class="text-sm font-medium mt-1"><span class="text-gray-500">Outcome:</span> {outcome}</p>}
         <div class="card-actions justify-end">
           {
             tags &&
