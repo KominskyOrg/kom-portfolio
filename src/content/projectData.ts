@@ -3,10 +3,10 @@ const projectData = [
     title: "UnifyOps - Internal Developer Platform",
     img: "/docker.svg",
     role: "Platform Engineering",
-    desc: "An internal developer platform I designed and operate end-to-end. Deploys multi-service systems safely using GitOps, Kubernetes, and strict runtime isolation. Three-tier stack architecture with enforced network boundaries, zero-downtime deploys, and a shared core package for consistent logging, auth, and error handling.",
-    outcome: "Zero-downtime deploys with ordered migrations, strict network isolation, GitOps rollback via image tag revert.",
+    desc: "An internal developer platform I designed and operate end-to-end using GitOps, Kubernetes, and strict runtime isolation.",
+    outcome: "Zero-downtime deploys with ordered migrations and GitOps rollback via image tag revert.",
     url: "/projects/unifyops",
-    badge: "DEEP DIVE",
+    isCaseStudy: true,
     target: "_self",
   },
   {

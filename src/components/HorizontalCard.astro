@@ -1,5 +1,5 @@
 ---
-const { title, img, desc, url, badge, role, outcome, target = "_blank" } = Astro.props;
+const { title, img, desc, url, badge, role, outcome, target = "_blank", isCaseStudy = false } = Astro.props;
 const { tags } = Astro.props as { tags: string[] };
 import { Image } from "astro:assets";
 const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
@@ -30,7 +30,7 @@ const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
         {role && <p class="text-sm text-gray-500 font-medium">{role}</p>}
         <p class="py-1 text-1xl">{desc}</p>
         {outcome && <p class="text-sm font-medium mt-1"><span class="text-gray-500">Outcome:</span> {outcome}</p>}
-        <div class="card-actions justify-end">
+        <div class="card-actions justify-end mt-2">
           {
             tags &&
               tags.map((tag) => (
@@ -38,6 +38,13 @@ const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
                   {tag}
                 </a>
               ))
+          }
+          {
+            isCaseStudy ? (
+              <span class="btn btn-primary btn-sm">Read architecture case study →</span>
+            ) : (
+              <span class="text-sm text-gray-500 hover:underline">View on GitHub →</span>
+            )
           }
         </div>
       </div>

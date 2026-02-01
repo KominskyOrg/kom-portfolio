@@ -5,8 +5,12 @@ import projectData from "../content/projectData.ts";
 ---
 
 <BaseLayout title="Projects" sideBarActiveItemID="projects">
-  <div>
-    <div class="text-3xl w-full font-bold mb-5">Professional Projects</div>
+  <div class="mb-8">
+    <div class="text-3xl w-full font-bold mb-3">Professional Projects</div>
+    <p class="text-lg text-gray-600">
+      Selected projects where I owned the full stack—from architecture decisions to production operations.
+      Each card is a summary. UnifyOps includes a detailed case study covering architecture, tradeoffs, and outcomes.
+    </p>
   </div>
 
   <div>
@@ -21,6 +25,8 @@ import projectData from "../content/projectData.ts";
             badge={project.badge}
             role={project.role}
             outcome={project.outcome}
+            isCaseStudy={project.isCaseStudy}
+            target={project.target}
           />
           {index < projectData.length - 1 ? <div class="divider my-0" /> : null}
         </>

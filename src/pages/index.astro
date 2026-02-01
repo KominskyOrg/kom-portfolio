@@ -5,12 +5,12 @@ import projectData from "../content/projectData.ts";
 ---
 
 <BaseLayout sideBarActiveItemID="home">
-  <div class="pb-12 mt-5">
+  <div class="pb-16 mt-5">
     <div class="text-xl py-1">Hey there!</div>
     <h1 class="text-5xl font-bold">I build internal platforms that enforce consistency, deploy safely through GitOps, and run without constant attention</h1>
-    <h2 class="text-3xl py-3 font-bold">
+    <p class="text-2xl py-3 text-gray-600">
       4+ years owning production Kubernetes—40% lower costs, 75% faster incident response
-    </h2>
+    </p>
     <p class="text-lg py-2">
       I've spent 4+ years owning production Kubernetes and AWS infrastructure. I reduced infrastructure costs by 40%, cut observability spend by 35%, and improved incident response time by 75%. I build Terraform-based IaC, GitOps workflows, and the monitoring systems that keep services running.
     </p>
@@ -34,8 +34,8 @@ import projectData from "../content/projectData.ts";
     </div>
   </div>
 
-  <div>
-    <h3 class="text-3xl w-full font-bold mb-2">My Latest Projects {"</>"}</h3>
+  <div class="mt-4">
+    <h2 class="text-2xl w-full font-semibold mb-4 text-gray-700">Selected Projects</h2>
   </div>
 
   <div>
@@ -49,6 +49,8 @@ import projectData from "../content/projectData.ts";
           badge={project.badge || null}
           role={project.role}
           outcome={project.outcome}
+          isCaseStudy={project.isCaseStudy}
+          target={project.target}
         />
         {index < 2 && <div class="divider my-0" />}
       </div>
