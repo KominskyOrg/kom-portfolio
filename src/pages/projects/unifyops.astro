@@ -1,0 +1,463 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="UnifyOps Deep Dive" sideBarActiveItemID="projects">
+  <div class="pb-12 mt-5">
+    <div class="text-sm text-gray-500 mb-2">
+      <a href="/projects" class="hover:underline">Projects</a> / UnifyOps
+    </div>
+    <h1 class="text-4xl font-bold">UnifyOps: Internal Developer Platform</h1>
+    <p class="text-lg text-gray-600 mt-2">
+      A platform I built to deploy multi-service systems safely using GitOps, Kubernetes, and strict runtime isolation.
+    </p>
+  </div>
+
+  <!-- SECTION 1: Problem and Constraints -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Problem and Constraints</h2>
+
+    <p class="text-lg mb-4">
+      I needed infrastructure that could deploy multiple services consistently, fail safely, and operate without my constant attention.
+    </p>
+
+    <p class="text-lg mb-6">
+      The alternative was manual deployments, inconsistent configurations across services, and debugging the same problems in different places. I had seen this pattern before — services that worked in isolation but failed in combination, deployments that required tribal knowledge, and outages that cascaded because nothing was isolated.
+    </p>
+
+    <h3 class="text-xl font-bold mb-3">Constraints</h3>
+    <div class="space-y-4">
+      <div>
+        <p class="font-semibold">Solo ownership.</p>
+        <p class="text-lg">I am the only contributor. This means no version negotiation between teams, but also no margin for complexity I cannot debug alone. Every abstraction must pay for itself in reduced cognitive load.</p>
+      </div>
+      <div>
+        <p class="font-semibold">Bare-metal Kubernetes.</p>
+        <p class="text-lg">The platform runs on home server infrastructure, not managed cloud services. I operate the control plane, the storage layer, and the networking. This rules out cloud-native shortcuts but forces understanding of what actually runs.</p>
+      </div>
+      <div>
+        <p class="font-semibold">Rapid iteration without downtime.</p>
+        <p class="text-lg">I deploy frequently. The system must handle failed deployments, bad migrations, and broken code without taking down working services. Rollback must be a Git revert, not a runbook.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: System Map -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">System Map</h2>
+
+    <p class="text-lg mb-6">
+      UnifyOps spans three repositories with distinct responsibilities:
+    </p>
+
+    <div class="space-y-4 mb-6">
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-bold">unifyops</p>
+        <p>The application monorepo. Contains all service code organized by domain and stack. Each stack implements a three-tier pattern: React frontend, FastAPI API gateway, FastAPI service with PostgreSQL. A shared Python package (<code class="bg-base-300 px-1 rounded">unifyops_core</code>) provides logging, authentication, and exception handling across all services.</p>
+      </div>
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-bold">unifyops-helm</p>
+        <p>The deployment contract. A single Helm chart that deploys any stack to Kubernetes. Services are not special-cased; they provide values, the chart provides structure. This chart defines health checks, network policies, resource limits, and migration ordering.</p>
+      </div>
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-bold">unifyops-infra</p>
+        <p>The GitOps source of truth. Contains environment-specific values files and ArgoCD ApplicationSets. The cluster state is derived from this repository. Deployments happen by updating an image tag and pushing.</p>
+      </div>
+    </div>
+
+    <p class="text-lg">
+      This separation allows me to change application behavior, deployment mechanics, or environment configuration independently, without coupling unrelated concerns.
+    </p>
+  </section>
+
+  <!-- SECTION 3: Runtime Architecture -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Runtime Architecture</h2>
+
+    <p class="text-lg mb-4">
+      Each stack runs as isolated pods in environment-scoped namespaces (<code class="bg-base-300 px-1 rounded">uo-dev</code>, <code class="bg-base-300 px-1 rounded">uo-staging</code>, <code class="bg-base-300 px-1 rounded">uo-prod</code>):
+    </p>
+
+    <div class="p-4 bg-base-200 rounded-lg font-mono text-center mb-6">
+      nginx-ingress → app (:3000) → api (:8002) → service (:8001) → PostgreSQL
+    </div>
+
+    <p class="text-lg mb-4">
+      Traffic flows are enforced by NetworkPolicy, not convention. The service tier only accepts connections from its API gateway. PostgreSQL only accepts connections from its service. A compromised pod cannot reach adjacent services.
+    </p>
+
+    <p class="text-lg">
+      Deployments use sync-wave ordering: database ready (wave 0), migrations complete (wave 1), application pods start (wave 2). This guarantees schema changes apply before code that depends on them.
+    </p>
+  </section>
+
+  <!-- SECTION 4: Platform Contracts -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Platform Contracts</h2>
+
+    <p class="text-lg mb-4">
+      The platform relies on contracts between repositories. Some are explicit and validated; others are implicit and carry risk.
+    </p>
+
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Contract</th>
+            <th>Enforcement</th>
+            <th>Risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Helm values schema</td>
+            <td>Template validation</td>
+            <td class="text-success">Low</td>
+          </tr>
+          <tr>
+            <td>Health endpoints</td>
+            <td>Runtime probe</td>
+            <td class="text-warning">Medium</td>
+          </tr>
+          <tr>
+            <td>Port conventions (3000/8002/8001)</td>
+            <td>Convention only</td>
+            <td class="text-warning">Medium</td>
+          </tr>
+          <tr>
+            <td>Shared library version</td>
+            <td>None (wildcard)</td>
+            <td class="text-error">High</td>
+          </tr>
+          <tr>
+            <td>Image naming</td>
+            <td>Convention across 3 repos</td>
+            <td class="text-error">High</td>
+          </tr>
+          <tr>
+            <td>GitOps paths</td>
+            <td>ArgoCD sync failure</td>
+            <td class="text-success">Low</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="text-lg mt-4">
+      High-risk contracts are candidates for CI validation if this platform moved beyond solo ownership.
+    </p>
+  </section>
+
+  <!-- SECTION 5: Core Package Design -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Core Package Design</h2>
+
+    <p class="text-lg mb-4">
+      <code class="bg-base-300 px-1 rounded">unifyops_core</code> centralizes cross-cutting concerns that would otherwise be duplicated across every service. It enforces consistency at the code level — not through documentation or convention, but through shared implementation.
+    </p>
+
+    <div class="overflow-x-auto mb-6">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Responsibility</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>exceptions</code></td>
+            <td>Typed exception hierarchy with HTTP semantics</td>
+          </tr>
+          <tr>
+            <td><code>logging</code></td>
+            <td>Structured JSON output, sensitive data redaction, service metadata injection</td>
+          </tr>
+          <tr>
+            <td><code>auth</code></td>
+            <td>JWT validation middleware, service-to-service authentication, token caching</td>
+          </tr>
+          <tr>
+            <td><code>client</code></td>
+            <td>Async HTTP client with logging, error handling, credential masking</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="text-lg mb-4">All services return identical error shapes:</p>
+
+    <pre class="p-4 bg-base-200 rounded-lg overflow-x-auto text-sm"><code>{`{
+  "status_code": 404,
+  "message": "User not found",
+  "error_id": "550e8400-e29b-41d4-a716-446655440000",
+  "error_type": "db_record_not_found",
+  "timestamp": "2024-01-01T12:00:00.123456Z"
+}`}</code></pre>
+
+    <p class="text-lg mt-4">
+      One line — <code class="bg-base-300 px-1 rounded">register_exception_handlers(app)</code> — gives every FastAPI app identical error responses. The <code class="bg-base-300 px-1 rounded">error_id</code> enables log correlation across services.
+    </p>
+  </section>
+
+  <!-- SECTION 6: Monorepo Structure -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Monorepo Structure</h2>
+
+    <p class="text-lg mb-4">
+      A stack is a vertical slice of functionality that can be developed, deployed, and scaled independently.
+    </p>
+
+    <pre class="p-4 bg-base-200 rounded-lg overflow-x-auto text-sm mb-6"><code>unifyops/
+├── identity/                    # Domain: user identity
+│   ├── auth/                    # Stack: authentication
+│   │   ├── auth-app/            # React frontend
+│   │   ├── auth-api/            # FastAPI gateway
+│   │   └── auth-service/        # FastAPI + PostgreSQL
+│   └── user/                    # Stack: user profiles
+├── platform/                    # Domain: platform infrastructure
+│   └── environment/             # Stack: environment management
+└── shared/
+    └── unifyops_core/           # Cross-stack Python utilities</code></pre>
+
+    <p class="text-lg mb-4">
+      The CI workflow detects which apps changed through path matching:
+    </p>
+
+    <ul class="list-disc ml-6 text-lg space-y-2">
+      <li>Changing <code class="bg-base-300 px-1 rounded">auth-service</code> builds only <code class="bg-base-300 px-1 rounded">auth-service</code></li>
+      <li>Three apps changed → three parallel build jobs</li>
+      <li>SHA tags are immutable; environment-latest tags enable quick rollback</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 7: End-to-End Deploy Flow -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">End-to-End Deploy Flow</h2>
+
+    <p class="text-lg mb-4">
+      A code change flows from commit to running pod in approximately two minutes:
+    </p>
+
+    <div class="overflow-x-auto mb-6">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Step</th>
+            <th>Actor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>T+0s</td><td>Push to dev</td><td>Developer</td></tr>
+          <tr><td>T+5s</td><td>Change detection</td><td>GitHub Actions</td></tr>
+          <tr><td>T+30s</td><td>Docker build (cached)</td><td>GitHub Actions</td></tr>
+          <tr><td>T+45s</td><td>Push to Harbor</td><td>GitHub Actions</td></tr>
+          <tr><td>T+50s</td><td>Update infra repo</td><td>GitHub Actions</td></tr>
+          <tr><td>T+60s</td><td>ArgoCD detects drift</td><td>ArgoCD</td></tr>
+          <tr><td>T+70s</td><td>Migration job</td><td>Kubernetes</td></tr>
+          <tr><td>T+90s</td><td>Deployment rollout</td><td>Kubernetes</td></tr>
+          <tr><td>T+105s</td><td class="font-bold">Traffic serving</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="text-xl font-bold mb-3">Failure Containment</h3>
+    <ul class="list-disc ml-6 text-lg space-y-2">
+      <li><strong>Build fails:</strong> Zero blast radius — no image pushed, no cluster change</li>
+      <li><strong>Image pull fails:</strong> Old pod continues serving (<code class="bg-base-300 px-1 rounded">maxUnavailable: 0</code>)</li>
+      <li><strong>Migration fails:</strong> Deployment blocked, old pods serve with old schema</li>
+      <li><strong>Health check fails:</strong> New pod doesn't receive traffic</li>
+      <li><strong>Rollback:</strong> Revert image tag in values file, ArgoCD syncs within 3 minutes</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 8: Tradeoff Synthesis -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Decisions and Tradeoffs</h2>
+
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Decision</th>
+            <th>Why</th>
+            <th>Cost</th>
+            <th>Revisit When</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-semibold">GitOps with ArgoCD</td>
+            <td>Audit trail, drift detection, self-healing</td>
+            <td>Additional infra repo</td>
+            <td>Never</td>
+          </tr>
+          <tr>
+            <td class="font-semibold">Monorepo</td>
+            <td>Atomic commits, shared tooling</td>
+            <td>No per-service versioning</td>
+            <td>Multiple teams need independent releases</td>
+          </tr>
+          <tr>
+            <td class="font-semibold">Centralized core package</td>
+            <td>Consistency without documentation</td>
+            <td>Services cannot deviate</td>
+            <td>Teams need autonomy</td>
+          </tr>
+          <tr>
+            <td class="font-semibold">Three-tier stacks</td>
+            <td>Security boundaries via NetworkPolicy</td>
+            <td>Three deploys per stack</td>
+            <td>Extreme internal call volume</td>
+          </tr>
+          <tr>
+            <td class="font-semibold">Default-deny network</td>
+            <td>Blast radius limitation</td>
+            <td>Explicit allow required</td>
+            <td>Never</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 9: Architecture Diagram -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Architecture Overview</h2>
+
+    <div class="p-6 bg-base-200 rounded-lg">
+      <pre class="text-sm overflow-x-auto"><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                              DEVELOPMENT                                 │
+│  ┌─────────────────────┐    ┌─────────────────────┐                     │
+│  │      unifyops       │────│   unifyops_core     │                     │
+│  │     (monorepo)      │    │  (shared package)   │                     │
+│  └──────────┬──────────┘    └─────────────────────┘                     │
+└─────────────┼───────────────────────────────────────────────────────────┘
+              │ git push
+              ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                 BUILD                                    │
+│  ┌─────────────────────┐         ┌─────────────────────┐                │
+│  │   GitHub Actions    │────────▶│   Harbor Registry   │                │
+│  │  (build & push)     │         │  (images + charts)  │                │
+│  └──────────┬──────────┘         └─────────────────────┘                │
+└─────────────┼───────────────────────────────────────────────────────────┘
+              │ update tag
+              ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                GITOPS                                    │
+│  ┌─────────────────────┐    ┌─────────────────────┐                     │
+│  │   unifyops-infra    │───▶│      ArgoCD         │◀───unifyops-helm    │
+│  │   (desired state)   │    │   (reconcile)       │   (templates)       │
+│  └─────────────────────┘    └──────────┬──────────┘                     │
+└─────────────────────────────────────────┼───────────────────────────────┘
+                                          │ sync
+                                          ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           KUBERNETES CLUSTER                             │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │                    Namespace: uo-{'{'+'env'+'}'}                            │  │
+│  │   ┌─────────┐     ┌─────────┐     ┌─────────────┐     ┌────────┐ │  │
+│  │   │   app   │────▶│   api   │────▶│   service   │────▶│ postgres│ │  │
+│  │   │  :3000  │     │  :8002  │     │    :8001    │     │  :5432  │ │  │
+│  │   └─────────┘     └─────────┘     └─────────────┘     └────────┘ │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────┘</code></pre>
+    </div>
+
+    <p class="text-lg mt-4">
+      Unidirectional flow from monorepo to cluster. ArgoCD acts as the control plane, reconciling desired state from Git. <code class="bg-base-300 px-1 rounded">unifyops_core</code> ensures runtime consistency across all services.
+    </p>
+  </section>
+
+  <!-- SECTION 10: Outcomes and What I'd Do Next -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Outcomes</h2>
+
+    <ul class="list-disc ml-6 text-lg space-y-2 mb-6">
+      <li><strong>Deployment velocity:</strong> Code change to production traffic in under two minutes, with zero-downtime rolling updates</li>
+      <li><strong>Failure containment:</strong> Build failures have zero blast radius; runtime failures are isolated to the affected stack</li>
+      <li><strong>Operational consistency:</strong> All services log identically, return identical error shapes, and authenticate identically</li>
+      <li><strong>Auditability:</strong> Every deployment is a Git commit; every rollback is a revert</li>
+      <li><strong>Scalability:</strong> Adding a new stack is copying a template and updating configuration</li>
+    </ul>
+
+    <p class="text-lg mb-6">
+      These outcomes matter because the platform is designed to be operated by one person, safely, on infrastructure I fully control.
+    </p>
+
+    <h3 class="text-xl font-bold mb-3">What I Would Improve Next</h3>
+    <ul class="list-disc ml-6 text-lg space-y-2">
+      <li><strong>Versioned core package releases:</strong> Publish to Harbor PyPI, pin explicit versions in services</li>
+      <li><strong>Contract validation in CI:</strong> Validate health endpoints, ports, and image naming before deployment</li>
+      <li><strong>Observability depth:</strong> Add OpenTelemetry instrumentation and Grafana dashboards</li>
+      <li><strong>Multi-cluster support:</strong> Extend ArgoCD for disaster recovery or geographic distribution</li>
+    </ul>
+  </section>
+
+  <!-- What I Owned -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">What I Owned</h2>
+
+    <p class="text-lg mb-4">
+      <strong>Full vertical ownership.</strong> I designed the architecture, wrote the code, built the CI/CD pipelines, configured ArgoCD, and operate the Kubernetes cluster.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-semibold">Application Code</p>
+        <p class="text-sm">FastAPI services, React frontends, SQLAlchemy models, Alembic migrations</p>
+      </div>
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-semibold">Shared Infrastructure</p>
+        <p class="text-sm"><code>unifyops_core</code> package (4,400 lines) — logging, auth, exceptions, HTTP client</p>
+      </div>
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-semibold">CI/CD</p>
+        <p class="text-sm">GitHub Actions with change detection, matrix builds, Harbor push, GitOps updates</p>
+      </div>
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-semibold">Kubernetes Deployment</p>
+        <p class="text-sm">Helm chart, sync-wave ordering, NetworkPolicy, health probes, HPA</p>
+      </div>
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-semibold">GitOps</p>
+        <p class="text-sm">ArgoCD ApplicationSets, environment namespaces, sealed secrets</p>
+      </div>
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-semibold">Operations</p>
+        <p class="text-sm">Monitoring, log aggregation, incident response, rollback execution</p>
+      </div>
+    </div>
+
+    <p class="text-lg mt-6">
+      This is not a team project I contributed to. I built it.
+    </p>
+  </section>
+
+  <!-- Summary -->
+  <section class="mb-12 p-6 bg-base-200 rounded-lg">
+    <p class="text-lg">
+      UnifyOps is a platform I built to solve my own infrastructure problems. It enforces consistency through shared code, deploys through Git, contains failures by design, and operates without my constant attention.
+    </p>
+    <p class="text-lg mt-4">
+      Every decision reflects real constraints: solo ownership, bare-metal infrastructure, and the need for safe rapid iteration. I acknowledge what I traded away — flexibility, per-service versioning, and the ability to deviate from platform patterns.
+    </p>
+    <p class="text-lg mt-4 font-semibold">
+      This is how I build and operate software.
+    </p>
+  </section>
+
+  <div class="mt-8">
+    <a href="/projects" class="btn btn-outline">← Back to Projects</a>
+    <a
+      href="https://github.com/KominskyOrg/unifyops-core"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn ml-4"
+    >
+      View on GitHub
+    </a>
+  </div>
+</BaseLayout>
