@@ -137,3 +137,8 @@ dist
 
 # Terraform
 .terraform*
+
+# Playwright
+playwright-report/
+playwright-results/
+.playwright-mcp/
