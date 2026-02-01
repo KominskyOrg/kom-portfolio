@@ -1,0 +1,379 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Job Scanner Deep Dive" sideBarActiveItemID="projects">
+  <div class="pb-12 mt-5">
+    <div class="text-sm text-gray-500 mb-2">
+      <a href="/projects" class="hover:underline">Projects</a> / Job Scanner
+    </div>
+    <h1 class="text-4xl font-bold">Job Scanner: LLM-Powered Job Screening</h1>
+    <p class="text-lg text-gray-600 mt-2">
+      An automated pipeline that uses GPT-4 for role evaluation with deterministic gates for dealbreaker detection.
+    </p>
+  </div>
+
+  <!-- SECTION 1: Why This Exists -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Why This Exists</h2>
+
+    <p class="text-lg mb-4">
+      Job searching at scale is a screening problem. Reviewing 50+ job descriptions daily, evaluating fit against my profile, and generating personalized application materials is tedious and error-prone. I built this pipeline to automate the 80% of decisions that follow clear patterns.
+    </p>
+
+    <p class="text-lg mb-6">
+      The core insight: LLMs excel at nuanced role fit scoring, but they hallucinate on binary constraints. "Is this role remote?" should never be a probabilistic answer. The solution is a hybrid architecture — LLMs for judgment calls, deterministic logic for dealbreakers.
+    </p>
+
+    <h3 class="text-xl font-bold mb-3">Design Goals</h3>
+    <div class="space-y-4">
+      <div>
+        <p class="font-semibold">Control.</p>
+        <p class="text-lg">I can override any decision. The system advises; I apply. There is no auto-apply. The pipeline generates materials; I submit them.</p>
+      </div>
+      <div>
+        <p class="font-semibold">Auditability.</p>
+        <p class="text-lg">Every decision has a traceable path — prompt version, profile version, input hash, decision reasons. Weeks later, I can reconstruct exactly why a role was skipped.</p>
+      </div>
+      <div>
+        <p class="font-semibold">Reliability.</p>
+        <p class="text-lg">Deterministic gates catch what LLMs miss. Contract terms and location requirements are pattern-matched, not inferred. Binary constraints get binary logic.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: High-Level Architecture -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">High-Level Architecture</h2>
+
+    <p class="text-lg mb-4">
+      The pipeline runs in two stages with clear separation of concerns:
+    </p>
+
+    <div class="p-6 bg-base-200 rounded-lg mb-6">
+      <pre class="text-sm overflow-x-auto"><code>{`STAGE 1: SCRAPE & EVALUATE
+┌─────────────┐     ┌─────────────┐     ┌─────────────────────────┐
+│  Scraper    │────▶│  Evaluator  │────▶│   Post-Evaluation       │
+│ (Playwright)│     │  (GPT-4o)   │     │   Gates (Regex)         │
+│             │     │             │     │                         │
+│ • LinkedIn  │     │ • Score 1-10│     │ • Contract terms        │
+│ • Dedupe    │     │ • Classify  │     │ • Onsite requirements   │
+│ • Paginate  │     │ • Risk      │     │ • Role mismatch         │
+└─────────────┘     └─────────────┘     │ • Staffing firm detect  │
+                                        │ • APPLY cap (20%)       │
+                                        └─────────────────────────┘
+
+STAGE 2: GENERATE WRITING
+┌─────────────────────┐     ┌─────────────────────────────────────┐
+│   Stage 2 Writer    │────▶│   Per-Role Storage                  │
+│     (GPT-4o)        │     │   output/roles/{role_id}/           │
+│                     │     │                                     │
+│ • Cover letter      │     │ • job_posting.json                  │
+│   (score >= 8)      │     │ • evaluation.json                   │
+│ • Recruiter msg     │     │ • application_plan.json             │
+│   (score >= 9 +HIGH)│     │ • pipeline_state.json               │
+└─────────────────────┘     └─────────────────────────────────────┘`}</code></pre>
+    </div>
+
+    <div class="space-y-4 mb-6">
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-bold">Stage 1: Scrape & Evaluate</p>
+        <p>Playwright navigates LinkedIn searches, extracts job descriptions, deduplicates by canonical ID (SHA256 hash of <code class="bg-base-300 px-1 rounded">linkedin:job:id</code>). Each job passes through GPT-4o with structured outputs for guaranteed schema compliance, then through deterministic post-evaluation gates. Output: APPLY, CONSIDER, or SKIP.</p>
+      </div>
+      <div class="p-4 bg-base-200 rounded-lg">
+        <p class="font-bold">Stage 2: Generate Writing</p>
+        <p>Only APPLY roles (score ≥ 9) trigger Stage 2. Cover letters require score ≥ 8; recruiter messages require score ≥ 9 AND HIGH confidence. Uses a separate writing profile optimized for narrative, not screening criteria. Output is submission-ready.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: LLM vs Deterministic Logic -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Where LLMs Apply (and Where They Don't)</h2>
+
+    <p class="text-lg mb-4">
+      The architecture splits decisions by reliability requirements:
+    </p>
+
+    <div class="overflow-x-auto mb-6">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Decision Type</th>
+            <th>Handler</th>
+            <th>Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Role fit score (1-10)</td>
+            <td class="font-semibold">LLM</td>
+            <td>Requires reading comprehension, context about my background</td>
+          </tr>
+          <tr>
+            <td>Role classification</td>
+            <td class="font-semibold">LLM</td>
+            <td>Titles are misleading; "Software Engineer" can be pure platform work</td>
+          </tr>
+          <tr>
+            <td>Risk assessment</td>
+            <td class="font-semibold">LLM</td>
+            <td>Startup funding signals, team maturity — requires inference</td>
+          </tr>
+          <tr>
+            <td>Contract terms (1099, C2C)</td>
+            <td class="font-semibold">Regex</td>
+            <td>Binary constraint. Pattern: <code class="bg-base-300 px-1 rounded">contract-to-hire|1099|corp-to-corp</code></td>
+          </tr>
+          <tr>
+            <td>Location requirements</td>
+            <td class="font-semibold">Regex</td>
+            <td>Binary constraint. Pattern: <code class="bg-base-300 px-1 rounded">relocation required|onsite required</code></td>
+          </tr>
+          <tr>
+            <td>Staffing firm detection</td>
+            <td class="font-semibold">Regex</td>
+            <td>Company name matching against 15+ known staffing indicators</td>
+          </tr>
+          <tr>
+            <td>Cover letter generation</td>
+            <td class="font-semibold">LLM</td>
+            <td>Requires narrative construction, role-specific positioning</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="text-xl font-bold mb-3">Post-Evaluation Gates</h3>
+    <p class="text-lg mb-4">
+      After GPT-4o returns its evaluation, five deterministic gates can override the decision:
+    </p>
+
+    <pre class="p-4 bg-base-200 rounded-lg overflow-x-auto text-sm mb-4"><code>{`# Gate 1: Contract terms force SKIP even from APPLY
+CONTRACT_SKIP_PATTERNS = [
+    r"\\bcontract-to-hire\\b", r"\\b1099\\b", r"\\bcorp-to-corp\\b",
+    r"\\bw2 contract\\b", r"\\bstaff augmentation\\b"
+]
+
+# Gate 2: Onsite requirements force SKIP
+ONSITE_SKIP_PATTERNS = [
+    r"\\brelocation required\\b", r"\\bonsite required\\b"
+]
+
+# Gate 3: Staffing firm detection → downgrades APPLY to CONSIDER
+STAFFING_INDICATORS = ["staffing", "recruiting", "tek systems", ...]
+
+# Gate 4: Role mismatch → SKIP if negative patterns without positives
+ROLE_NEGATIVE_PATTERNS = [r"\\bfrontend\\b", r"\\bfullstack\\b", ...]
+
+# Gate 5: APPLY cap → max 20% of roles per scan can be APPLY
+# Sorted by confidence (HIGH first), then score (descending)`}</code></pre>
+
+    <p class="text-lg">
+      If GPT-4o says APPLY but the job description contains "contract-to-hire", the gate overrides to SKIP. No exceptions. This catches the cases where the LLM missed or misinterpreted terms.
+    </p>
+  </section>
+
+  <!-- SECTION 4: Auditability -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Auditability</h2>
+
+    <p class="text-lg mb-4">
+      Every evaluation is traceable. The metadata captures what was sent, what was returned, and how the decision was made:
+    </p>
+
+    <pre class="p-4 bg-base-200 rounded-lg overflow-x-auto text-sm mb-4"><code>{`{
+  "model": "gpt-4o",
+  "temperature": 0.3,
+  "prompt_version": "2.1",
+  "prompt_hash": "a1b2c3d4e5f6",
+  "profile_version": "2024-01-29",
+  "profile_hash": "f6e5d4c3b2a1",
+  "job_description_hash": "1a2b3c4d5e6f",
+  "latency_ms": 1847,
+  "token_usage": {
+    "prompt_tokens": 2156,
+    "completion_tokens": 412,
+    "total_tokens": 2568
+  },
+  "decision_path": [
+    "api_success", "json_parsed", "schema_valid",
+    "score_9", "decision_apply", "gate_downgrade"
+  ],
+  "pre_gates_final_decision": "APPLY",
+  "post_gates_final_decision": "CONSIDER",
+  "post_gates_reasons": ["staffing:company:tek systems"]
+}`}</code></pre>
+
+    <p class="text-lg mb-4">
+      This enables:
+    </p>
+
+    <ul class="list-disc ml-6 text-lg space-y-2">
+      <li><strong>Prompt regression testing:</strong> Run test cases against new prompt versions, compare decisions</li>
+      <li><strong>Decision forensics:</strong> Understand why a role was skipped months later</li>
+      <li><strong>Drift detection:</strong> If APPLY rates spike or crash, trace to prompt or profile changes</li>
+      <li><strong>Cost analysis:</strong> Track token usage per evaluation for budget planning</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 5: Schema Enforcement -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Schema Enforcement</h2>
+
+    <p class="text-lg mb-4">
+      The pipeline uses OpenAI's Structured Outputs with strict JSON schema enforcement:
+    </p>
+
+    <pre class="p-4 bg-base-200 rounded-lg overflow-x-auto text-sm mb-4"><code>{`EVALUATION_SCHEMA = {
+  "type": "json_schema",
+  "json_schema": {
+    "name": "job_evaluation",
+    "strict": True,
+    "schema": {
+      "properties": {
+        "role_fit_score": { "type": "integer" },
+        "final_decision": { "enum": ["APPLY", "CONSIDER", "SKIP"] },
+        "seniority_level": { "enum": ["Junior", "Mid", "Senior", ...] },
+        "confidence_signal": { "enum": ["HIGH", "MEDIUM", "LOW"] },
+        "key_requirements": { "type": "array" },
+        "concerns": { "type": "array" },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}`}</code></pre>
+
+    <p class="text-lg mb-4">
+      Defense in depth: even with structured outputs, the code validates schema as a fallback. Invalid responses fail closed to SKIP:
+    </p>
+
+    <pre class="p-4 bg-base-200 rounded-lg overflow-x-auto text-sm"><code>{`def _create_invalid_evaluation(self, error: str) -> JobEvaluation:
+    return JobEvaluation(
+        role_fit_score=1,
+        final_decision="SKIP",
+        confidence_signal="LOW",
+        risk_level="high",
+        is_valid=False,
+        error=error,
+    )`}</code></pre>
+  </section>
+
+  <!-- SECTION 6: Storage Model -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Storage Model</h2>
+
+    <p class="text-lg mb-4">
+      Each role gets its own directory with typed JSON files. The canonical ID is derived from the source and job ID, then hashed to create the role_id:
+    </p>
+
+    <pre class="p-4 bg-base-200 rounded-lg overflow-x-auto text-sm mb-4"><code>{`output/
+├── roles/                           # Primary storage
+│   └── a1b2c3d4e5f6/               # role_id = SHA256(canonical_id)[:12]
+│       ├── job_posting.json        # Scraped data + diagnostics
+│       ├── evaluation.json         # Stage 1 result + metadata
+│       ├── application_plan.json   # Stage 2 outputs (if run)
+│       └── pipeline_state.json     # Workflow state
+├── apply/                          # Stage 2 outputs by timestamp
+├── scan-results.json               # Derived view (regenerated from roles)
+├── quarantine/                     # Invalid data for debugging
+└── needs_attention/                # Recoverable issues`}</code></pre>
+
+    <p class="text-lg">
+      <strong>Key insight:</strong> <code class="bg-base-300 px-1 rounded">scan-results.json</code> is derived, not primary. The source of truth is the per-role directories. This enables idempotent scraping — re-running Stage 1 on the same jobs is a no-op.
+    </p>
+  </section>
+
+  <!-- SECTION 7: Outcomes -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">Outcomes</h2>
+
+    <ul class="list-disc ml-6 text-lg space-y-2 mb-6">
+      <li><strong>80% of screening automated:</strong> Daily pipeline processes 50+ roles with one command</li>
+      <li><strong>Zero false positives on dealbreakers:</strong> Deterministic gates catch contract and location terms the LLM missed</li>
+      <li><strong>Submission-ready cover letters:</strong> High-match roles get tailored letters without manual drafting</li>
+      <li><strong>Full audit trail:</strong> Every decision traceable to prompt version, profile version, and input hash</li>
+      <li><strong>APPLY rate control:</strong> 20% cap prevents over-confidence from flooding the queue</li>
+    </ul>
+
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Decision</th>
+            <th>Criteria</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-semibold">APPLY</td>
+            <td>Score ≥ 9, no dealbreakers, within 20% cap</td>
+            <td>Generate cover letter + recruiter message</td>
+          </tr>
+          <tr>
+            <td class="font-semibold">CONSIDER</td>
+            <td>Score 6-8, or downgraded by gates</td>
+            <td>Manual review queue</td>
+          </tr>
+          <tr>
+            <td class="font-semibold">SKIP</td>
+            <td>Score &lt; 6, or dealbreaker detected</td>
+            <td>No action</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 8: What I Learned -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold mb-4">What I Learned</h2>
+
+    <div class="space-y-4">
+      <div>
+        <p class="font-semibold">LLMs are great at judgment, terrible at constraints.</p>
+        <p class="text-lg">Use them for scoring and classification. Use regex for binary decisions. The hybrid approach catches what each misses alone.</p>
+      </div>
+      <div>
+        <p class="font-semibold">Structured outputs reduce but don't eliminate schema errors.</p>
+        <p class="text-lg">Defense in depth matters. Validate even when the API guarantees structure. Fail closed to SKIP, not APPLY.</p>
+      </div>
+      <div>
+        <p class="font-semibold">Prompt versioning is essential for iteration.</p>
+        <p class="text-lg">Without version tracking, you can't run regression tests. Without regression tests, prompt changes are blind experiments.</p>
+      </div>
+      <div>
+        <p class="font-semibold">Canonical IDs enable idempotent operations.</p>
+        <p class="text-lg">Hashing the job source and ID to create role_id means re-scraping the same job is a no-op. Deduplication is automatic.</p>
+      </div>
+      <div>
+        <p class="font-semibold">Never auto-apply.</p>
+        <p class="text-lg">The system advises. I decide. This isn't automation for automation's sake — it's leverage for better decisions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary -->
+  <section class="mb-12 p-6 bg-base-200 rounded-lg">
+    <p class="text-lg">
+      Job Scanner is a pipeline I built to automate job screening with control, auditability, and reliability as core constraints. LLMs handle the judgment calls; deterministic gates enforce the dealbreakers. Every decision is traceable. The output is actionable.
+    </p>
+    <p class="text-lg mt-4 font-semibold">
+      This is how I approach LLM-powered automation: trust where appropriate, verify everywhere.
+    </p>
+  </section>
+
+  <div class="mt-8">
+    <a href="/projects" class="btn btn-outline">← Back to Projects</a>
+    <a
+      href="https://github.com/KominskyOrg/job-scanner"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn ml-4"
+    >
+      View on GitHub
+    </a>
+  </div>
+</BaseLayout>
