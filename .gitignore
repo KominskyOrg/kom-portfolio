@@ -142,3 +142,5 @@ dist
 playwright-report/
 playwright-results/
 .playwright-mcp/
+
+.DS_Store
